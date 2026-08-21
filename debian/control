@@ -1,0 +1,26 @@
+Source: xdg-desktop-portal-lingmo
+Section: admin
+Priority: optional
+Maintainer: Lingmo OS Team <team@lingmo.org>
+Build-Depends:
+  debhelper (>= 11),
+  debhelper-compat (= 11),
+  cargo,
+  just,
+  libclang-dev,
+  libglib2.0-dev,
+  libegl-dev,
+  libgbm-dev,
+  libpipewire-0.3-dev,
+  libwayland-dev,
+  libxkbcommon-dev,
+  pkg-config,
+Standards-Version: 4.3.0
+Homepage: https://github.com/Matrinsoft/xdg-desktop-portal-lingmo
+
+Package: xdg-desktop-portal-lingmo
+Architecture: amd64 arm64
+Depends:
+  ${misc:Depends},
+  ${shlibs:Depends}
+Description: Cosmic backend for xdg-desktop-portal
