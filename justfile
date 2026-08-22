@@ -60,32 +60,32 @@ install:
 
 # Vendors Cargo dependencies into a tarball
 vendor:
-    rm -rf .cargo
-    mkdir -p .cargo
-    cargo vendor 2>/dev/null | awk '/^\[/{p=1} p' > .cargo/config.toml
-    if ! grep -q 'directory' .cargo/config.toml 2>/dev/null; then
-        echo '[source.crates-io]' >> .cargo/config.toml
-        echo 'replace-with = "vendored-sources"' >> .cargo/config.toml
-        echo '' >> .cargo/config.toml
-        echo '[source.vendored-sources]' >> .cargo/config.toml
-        echo 'directory = "vendor"' >> .cargo/config.toml
-    fi
-    grep '^source = "git+" Cargo.lock | sed 's/source = "//;s/"$//' | sort -u | while read src; do \
-        echo "[source \"$src\"]"; \
-        echo 'replace-with = "vendored-sources"'; \
-        echo ""; \
-    done >> .cargo/config.toml
-    echo >> .cargo/config.toml
-    echo '[env]' >> .cargo/config.toml
-    if [ -n "${SOURCE_DATE_EPOCH}" ]; then \
-        source_date="$(date -d "@${SOURCE_DATE_EPOCH}" "+%Y-%m-%d")"; \
-        echo "VERGEN_GIT_COMMIT_DATE = \"${source_date}\"" >> .cargo/config.toml; \
-    fi
-    if [ -n "${SOURCE_GIT_HASH}" ]; then \
-        echo "VERGEN_GIT_SHA = \"${SOURCE_GIT_HASH}\"" >> .cargo/config.toml; \
-    fi
-    tar pcf vendor.tar .cargo vendor
-    rm -rf .cargo vendor
+	rm -rf .cargo
+	mkdir -p .cargo
+	cargo vendor 2>/dev/null | awk '/^\[/{p=1} p' > .cargo/config.toml
+	if ! grep -q 'directory' .cargo/config.toml 2>/dev/null; then
+	echo '[source.crates-io]' >> .cargo/config.toml
+	echo 'replace-with = "vendored-sources"' >> .cargo/config.toml
+	echo '' >> .cargo/config.toml
+	echo '[source.vendored-sources]' >> .cargo/config.toml
+	echo 'directory = "vendor"' >> .cargo/config.toml
+	fi
+	grep '^source = "git+" Cargo.lock | sed 's/source = "//;s/"$//' | sort -u | while read src; do \
+	echo "[source \"$src\"]"; \
+	echo 'replace-with = "vendored-sources"'; \
+	echo ""; \
+	done >> .cargo/config.toml
+	echo >> .cargo/config.toml
+	echo '[env]' >> .cargo/config.toml
+	if [ -n "${SOURCE_DATE_EPOCH}" ]; then \
+	source_date="$(date -d "@${SOURCE_DATE_EPOCH}" "+%Y-%m-%d")"; \
+	echo "VERGEN_GIT_COMMIT_DATE = \"${source_date}\"" >> .cargo/config.toml; \
+	fi
+	if [ -n "${SOURCE_GIT_HASH}" ]; then \
+	echo "VERGEN_GIT_SHA = \"${SOURCE_GIT_HASH}\"" >> .cargo/config.toml; \
+	fi
+	tar pcf vendor.tar .cargo vendor
+	rm -rf .cargo vendor
 
 # Extracts the vendored dependencies when vendor=1
 [private]
