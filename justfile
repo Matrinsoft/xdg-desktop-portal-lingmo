@@ -63,6 +63,11 @@ vendor:
     rm -rf .cargo
     mkdir -p .cargo
     cargo vendor 2>/dev/null | awk '/^\[/{p=1} p' > .cargo/config.toml
+    grep '^source = "git+" Cargo.lock | sed 's/source = "//;s/"$//' | sort -u | while read src; do \
+        echo "[source \"$src\"]"; \
+        echo 'replace-with = "vendored-sources"'; \
+        echo ""; \
+    done >> .cargo/config.toml
     echo >> .cargo/config.toml
     echo '[env]' >> .cargo/config.toml
     if [ -n "${SOURCE_DATE_EPOCH}" ]; then \
