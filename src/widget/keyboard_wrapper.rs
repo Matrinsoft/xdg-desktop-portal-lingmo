@@ -1,20 +1,20 @@
-use cosmic::iced::core::event::Event;
-use cosmic::iced::core::widget::{Operation, Tree};
-use cosmic::iced::core::{
+use lingmo::iced::core::event::Event;
+use lingmo::iced::core::widget::{Operation, Tree};
+use lingmo::iced::core::{
     Clipboard, Element, Layout, Length, Rectangle, Shell, Size, Widget, keyboard, layout, mouse,
     overlay, renderer,
 };
 
 #[allow(missing_debug_implementations)]
 pub struct KeyboardWrapper<'a, Message> {
-    content: Element<'a, Message, cosmic::Theme, cosmic::Renderer>,
+    content: Element<'a, Message, lingmo::Theme, lingmo::Renderer>,
     handler: fn(keyboard::Key, keyboard::Modifiers) -> Option<Message>,
 }
 
 impl<'a, Message> KeyboardWrapper<'a, Message> {
     /// Creates a [`KeyboardWrapper`] with the given content.
     pub fn new(
-        content: impl Into<Element<'a, Message, cosmic::Theme, cosmic::Renderer>>,
+        content: impl Into<Element<'a, Message, lingmo::Theme, lingmo::Renderer>>,
         handler: fn(keyboard::Key, keyboard::Modifiers) -> Option<Message>,
     ) -> Self {
         KeyboardWrapper {
@@ -24,7 +24,7 @@ impl<'a, Message> KeyboardWrapper<'a, Message> {
     }
 }
 
-impl<'a, Message> Widget<Message, cosmic::Theme, cosmic::Renderer> for KeyboardWrapper<'a, Message>
+impl<'a, Message> Widget<Message, lingmo::Theme, lingmo::Renderer> for KeyboardWrapper<'a, Message>
 where
     Message: Clone,
 {
@@ -43,7 +43,7 @@ where
     fn layout(
         &mut self,
         tree: &mut Tree,
-        renderer: &cosmic::Renderer,
+        renderer: &lingmo::Renderer,
         limits: &layout::Limits,
     ) -> layout::Node {
         self.content
@@ -55,7 +55,7 @@ where
         &mut self,
         tree: &mut Tree,
         layout: Layout<'_>,
-        renderer: &cosmic::Renderer,
+        renderer: &lingmo::Renderer,
         operation: &mut dyn Operation<()>,
     ) {
         self.content
@@ -69,7 +69,7 @@ where
         event: &Event,
         layout: Layout<'_>,
         cursor: mouse::Cursor,
-        renderer: &cosmic::Renderer,
+        renderer: &lingmo::Renderer,
         clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, Message>,
         viewport: &Rectangle,
@@ -116,7 +116,7 @@ where
         layout: Layout<'_>,
         cursor: mouse::Cursor,
         viewport: &Rectangle,
-        renderer: &cosmic::Renderer,
+        renderer: &lingmo::Renderer,
     ) -> mouse::Interaction {
         self.content.as_widget().mouse_interaction(
             &tree.children[0],
@@ -130,8 +130,8 @@ where
     fn draw(
         &self,
         tree: &Tree,
-        renderer: &mut cosmic::Renderer,
-        theme: &cosmic::Theme,
+        renderer: &mut lingmo::Renderer,
+        theme: &lingmo::Theme,
         renderer_style: &renderer::Style,
         layout: Layout<'_>,
         cursor: mouse::Cursor,
@@ -152,10 +152,10 @@ where
         &'b mut self,
         tree: &'b mut Tree,
         layout: Layout<'b>,
-        renderer: &cosmic::Renderer,
+        renderer: &lingmo::Renderer,
         viewport: &Rectangle,
-        translation: cosmic::iced::Vector,
-    ) -> Option<overlay::Element<'b, Message, cosmic::Theme, cosmic::Renderer>> {
+        translation: lingmo::iced::Vector,
+    ) -> Option<overlay::Element<'b, Message, lingmo::Theme, lingmo::Renderer>> {
         self.content.as_widget_mut().overlay(
             &mut tree.children[0],
             layout,
@@ -169,8 +169,8 @@ where
         &self,
         state: &Tree,
         layout: Layout<'_>,
-        renderer: &cosmic::Renderer,
-        dnd_rectangles: &mut cosmic::iced::core::clipboard::DndDestinationRectangles,
+        renderer: &lingmo::Renderer,
+        dnd_rectangles: &mut lingmo::iced::core::clipboard::DndDestinationRectangles,
     ) {
         if let Some(state) = state.children.first() {
             self.content
@@ -181,13 +181,13 @@ where
 }
 
 impl<'a, Message> From<KeyboardWrapper<'a, Message>>
-    for Element<'a, Message, cosmic::Theme, cosmic::Renderer>
+    for Element<'a, Message, lingmo::Theme, lingmo::Renderer>
 where
     Message: 'a + Clone,
 {
     fn from(
         area: KeyboardWrapper<'a, Message>,
-    ) -> Element<'a, Message, cosmic::Theme, cosmic::Renderer> {
+    ) -> Element<'a, Message, lingmo::Theme, lingmo::Renderer> {
         Element::new(area)
     }
 }

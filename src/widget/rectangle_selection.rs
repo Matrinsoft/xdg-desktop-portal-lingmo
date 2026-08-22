@@ -1,15 +1,15 @@
 use std::borrow::Cow;
 
-use cosmic::iced::clipboard::dnd::{
+use lingmo::iced::clipboard::dnd::{
     self, DndAction, DndDestinationRectangle, DndEvent, OfferEvent, SourceEvent,
 };
-use cosmic::iced::clipboard::mime::{AllowedMimeTypes, AsMimeTypes};
-use cosmic::iced::core::clipboard::DndSource;
-use cosmic::iced::core::layout::Node;
-use cosmic::iced::core::renderer::Quad;
-use cosmic::iced::core::{Border, Color, Length, Point, Rectangle, Renderer, Shadow, Size};
-use cosmic::iced::{self, mouse};
-use cosmic::widget::{self, Widget};
+use lingmo::iced::clipboard::mime::{AllowedMimeTypes, AsMimeTypes};
+use lingmo::iced::core::clipboard::DndSource;
+use lingmo::iced::core::layout::Node;
+use lingmo::iced::core::renderer::Quad;
+use lingmo::iced::core::{Border, Color, Length, Point, Rectangle, Renderer, Shadow, Size};
+use lingmo::iced::{self, mouse};
+use lingmo::widget::{self, Widget};
 
 use crate::screenshot::Rect;
 
@@ -298,7 +298,7 @@ impl<Msg> RectangleSelection<Msg> {
     }
 }
 
-impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
+impl<Msg: 'static + Clone> Widget<Msg, lingmo::Theme, lingmo::Renderer>
     for RectangleSelection<Msg>
 {
     fn size(&self) -> Size<Length> {
@@ -307,14 +307,14 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
 
     fn layout(
         &mut self,
-        _tree: &mut cosmic::iced::core::widget::Tree,
-        _renderer: &cosmic::Renderer,
-        limits: &cosmic::iced::core::layout::Limits,
-    ) -> cosmic::iced::core::layout::Node {
+        _tree: &mut lingmo::iced::core::widget::Tree,
+        _renderer: &lingmo::Renderer,
+        limits: &lingmo::iced::core::layout::Limits,
+    ) -> lingmo::iced::core::layout::Node {
         Node::new(limits.width(Length::Fill).height(Length::Fill).resolve(
             Length::Fill,
             Length::Fill,
-            cosmic::iced::core::Size::ZERO,
+            lingmo::iced::core::Size::ZERO,
         ))
     }
 
@@ -329,7 +329,7 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
         _layout: iced::core::Layout<'_>,
         cursor: iced::core::mouse::Cursor,
         _viewport: &Rectangle,
-        _renderer: &cosmic::Renderer,
+        _renderer: &lingmo::Renderer,
     ) -> iced::core::mouse::Interaction {
         match self.drag_state(cursor) {
             DragState::None => {
@@ -357,13 +357,13 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
         event: &iced::core::Event,
         layout: iced::core::Layout<'_>,
         cursor: iced::core::mouse::Cursor,
-        _renderer: &cosmic::Renderer,
+        _renderer: &lingmo::Renderer,
         clipboard: &mut dyn iced::core::Clipboard,
         shell: &mut iced::core::Shell<'_, Msg>,
         _viewport: &Rectangle,
     ) {
         match event {
-            cosmic::iced::core::Event::Dnd(DndEvent::Offer(id, e)) if *id == Some(self.drag_id) => {
+            lingmo::iced::core::Event::Dnd(DndEvent::Offer(id, e)) if *id == Some(self.drag_id) => {
                 if self.drag_state == DragState::None {
                     return;
                 }
@@ -399,7 +399,7 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
                     _ => {}
                 }
             }
-            cosmic::iced::core::Event::Dnd(DndEvent::Source(e)) => {
+            lingmo::iced::core::Event::Dnd(DndEvent::Source(e)) => {
                 if matches!(
                     e,
                     SourceEvent::Finished | SourceEvent::Cancelled | SourceEvent::Dropped
@@ -411,7 +411,7 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
                     ));
                 }
             }
-            cosmic::iced::core::Event::Mouse(e) => {
+            lingmo::iced::core::Event::Mouse(e) => {
                 if !cursor.is_over(layout.bounds()) {
                     return;
                 }
@@ -458,13 +458,13 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
 
     fn draw(
         &self,
-        _tree: &cosmic::iced::core::widget::Tree,
-        renderer: &mut cosmic::Renderer,
-        theme: &cosmic::Theme,
-        _style: &cosmic::iced::core::renderer::Style,
-        _layout: cosmic::iced::core::Layout<'_>,
-        _cursor: cosmic::iced::core::mouse::Cursor,
-        _viewport: &cosmic::iced::core::Rectangle,
+        _tree: &lingmo::iced::core::widget::Tree,
+        renderer: &mut lingmo::Renderer,
+        theme: &lingmo::Theme,
+        _style: &lingmo::iced::core::renderer::Style,
+        _layout: lingmo::iced::core::Layout<'_>,
+        _cursor: lingmo::iced::core::mouse::Cursor,
+        _viewport: &lingmo::iced::core::Rectangle,
     ) {
         // first draw background overlay for non-selected bg
         // then draw quad for selection clipped to output rect
@@ -491,10 +491,10 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
         };
         #[cfg(feature = "wgpu")]
         {
-            use cosmic::iced::advanced::graphics::Mesh;
-            use cosmic::iced::advanced::graphics::color::pack;
-            use cosmic::iced::advanced::graphics::mesh::{Indexed, Renderer, SolidVertex2D};
-            use cosmic::iced::core::Transformation;
+            use lingmo::iced::advanced::graphics::Mesh;
+            use lingmo::iced::advanced::graphics::color::pack;
+            use lingmo::iced::advanced::graphics::mesh::{Indexed, Renderer, SolidVertex2D};
+            use lingmo::iced::core::Transformation;
             let mut overlay = Color::BLACK;
             overlay.a = 0.3;
 
@@ -604,7 +604,7 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
         &self,
         _state: &iced::core::widget::Tree,
         layout: iced::core::Layout<'_>,
-        _renderer: &cosmic::Renderer,
+        _renderer: &lingmo::Renderer,
         dnd_rectangles: &mut iced::core::clipboard::DndDestinationRectangles,
     ) {
         let bounds = layout.bounds();
@@ -627,11 +627,11 @@ impl<Msg: 'static + Clone> Widget<Msg, cosmic::Theme, cosmic::Renderer>
     }
 }
 
-impl<'a, Message> From<RectangleSelection<Message>> for cosmic::Element<'a, Message>
+impl<'a, Message> From<RectangleSelection<Message>> for lingmo::Element<'a, Message>
 where
     Message: 'static + Clone,
 {
-    fn from(w: RectangleSelection<Message>) -> cosmic::Element<'a, Message> {
-        cosmic::Element::new(w)
+    fn from(w: RectangleSelection<Message>) -> lingmo::Element<'a, Message> {
+        lingmo::Element::new(w)
     }
 }

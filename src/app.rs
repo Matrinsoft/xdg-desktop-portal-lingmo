@@ -1,17 +1,17 @@
 use crate::{access, config, file_chooser, screencast_dialog, screenshot, subscription};
-use cosmic::iced::core::event::wayland::OutputEvent;
-use cosmic::iced::platform_specific::shell::commands::layer_surface::get_layer_surface;
-use cosmic::iced::runtime::platform_specific::wayland::layer_surface::{
+use lingmo::iced::core::event::wayland::OutputEvent;
+use lingmo::iced::platform_specific::shell::commands::layer_surface::get_layer_surface;
+use lingmo::iced::runtime::platform_specific::wayland::layer_surface::{
     IcedMargin, SctkLayerSurfaceSettings,
 };
-use cosmic::iced::{Event, Length, Limits, Subscription, event, window};
-use cosmic::{Task, app, cosmic_config, widget};
+use lingmo::iced::{Event, Length, Limits, Subscription, event, window};
+use lingmo::{Task, app, cosmic_config, widget};
 use cosmic_client_toolkit::sctk::shell::wlr_layer;
 use std::collections::HashMap;
 use wayland_client::{Connection, Proxy, protocol::wl_output::WlOutput};
 
-pub(crate) fn run() -> cosmic::iced::Result {
-    let settings = cosmic::app::Settings::default()
+pub(crate) fn run() -> lingmo::iced::Result {
+    let settings = lingmo::app::Settings::default()
         .no_main_window(true)
         .exit_on_close(false);
     let (config, config_handler) = config::Config::load();
@@ -19,7 +19,7 @@ pub(crate) fn run() -> cosmic::iced::Result {
         config,
         config_handler,
     };
-    cosmic::app::run::<CosmicPortal>(settings, flags)
+    lingmo::app::run::<CosmicPortal>(settings, flags)
 }
 
 // run iced app with no main surface
@@ -77,8 +77,8 @@ pub struct Flags {
     pub config: config::Config,
 }
 
-impl cosmic::Application for CosmicPortal {
-    type Executor = cosmic::executor::Default;
+impl lingmo::Application for CosmicPortal {
+    type Executor = lingmo::executor::Default;
 
     type Flags = Flags;
 
@@ -100,8 +100,8 @@ impl cosmic::Application for CosmicPortal {
             config_handler,
             config,
         }: Self::Flags,
-    ) -> (Self, cosmic::iced::Task<cosmic::Action<Self::Message>>) {
-        core.set_app_type(cosmic::core::AppType::System);
+    ) -> (Self, lingmo::iced::Task<lingmo::Action<Self::Message>>) {
+        core.set_app_type(lingmo::core::AppType::System);
         let dummy_id = window::Id::unique();
         (
             Self {
@@ -127,7 +127,7 @@ impl cosmic::Application for CosmicPortal {
                 keyboard_interactivity: wlr_layer::KeyboardInteractivity::None,
                 input_zone: Some(Vec::new()),
                 anchor: wlr_layer::Anchor::empty(),
-                output: cosmic::iced::runtime::platform_specific::wayland::layer_surface::IcedOutput::Active,
+                output: lingmo::iced::runtime::platform_specific::wayland::layer_surface::IcedOutput::Active,
                 namespace: "cosmic_portal_dummy".into(),
                 margin: IcedMargin::default(),
                 size: Some((Some(6), Some(6))),
@@ -137,11 +137,11 @@ impl cosmic::Application for CosmicPortal {
         )
     }
 
-    fn view(&self) -> cosmic::Element<'_, Self::Message> {
+    fn view(&self) -> lingmo::Element<'_, Self::Message> {
         unimplemented!()
     }
 
-    fn view_window(&self, id: window::Id) -> cosmic::Element<'_, Self::Message> {
+    fn view_window(&self, id: window::Id) -> lingmo::Element<'_, Self::Message> {
         if Some(id) == self.access_args.as_ref().map(|args| args.access_id) {
             access::view(self).map(Msg::Access)
         } else if id == *screencast_dialog::SCREENCAST_ID {
@@ -158,7 +158,7 @@ impl cosmic::Application for CosmicPortal {
         }
     }
 
-    fn update(&mut self, message: Self::Message) -> cosmic::Task<cosmic::Action<Self::Message>> {
+    fn update(&mut self, message: Self::Message) -> lingmo::Task<lingmo::Action<Self::Message>> {
         match message {
             Msg::Access(m) => access::update_msg(self, m),
             Msg::FileChooser(id, m) => file_chooser::update_msg(self, id, m),
@@ -173,14 +173,14 @@ impl cosmic::Application for CosmicPortal {
                 subscription::Event::Config(config) => self.update(Msg::ConfigSubUpdate(config)),
                 subscription::Event::Accent(_)
                 | subscription::Event::IsDark(_)
-                | subscription::Event::HighContrast(_) => cosmic::iced::Task::none(),
+                | subscription::Event::HighContrast(_) => lingmo::iced::Task::none(),
                 subscription::Event::Init(tx) => {
                     self.tx = Some(tx);
                     Task::none()
                 }
                 subscription::Event::NameLost => {
                     tracing::warn!("'{}' name on bus lost. Exiting.", crate::DBUS_NAME);
-                    cosmic::iced::exit()
+                    lingmo::iced::exit()
                 }
             },
             Msg::Screenshot(m) => screenshot::update_msg(self, m),
@@ -262,7 +262,7 @@ impl cosmic::Application for CosmicPortal {
                     self.prev_rectangle = Some(rect);
                 }
 
-                cosmic::iced::Task::none()
+                lingmo::iced::Task::none()
             }
             Msg::ConfigSetScreenshot(screenshot) => {
                 match &mut self.config_handler {
@@ -274,11 +274,11 @@ impl cosmic::Application for CosmicPortal {
                     None => tracing::error!("Failed to save config: No config handler"),
                 }
 
-                cosmic::iced::Task::none()
+                lingmo::iced::Task::none()
             }
             Msg::ConfigSubUpdate(config) => {
                 self.config = config;
-                cosmic::iced::Task::none()
+                lingmo::iced::Task::none()
             }
         }
     }
@@ -312,7 +312,7 @@ impl cosmic::Application for CosmicPortal {
     fn system_theme_mode_update(
         &mut self,
         _keys: &[&'static str],
-        new_theme: &cosmic::cosmic_theme::ThemeMode,
+        new_theme: &lingmo::cosmic_theme::ThemeMode,
     ) -> app::Task<Self::Message> {
         let old = self.core.system_is_dark();
         let new = new_theme.is_dark;
@@ -329,8 +329,8 @@ impl cosmic::Application for CosmicPortal {
     fn system_theme_update(
         &mut self,
         _keys: &[&'static str],
-        new_theme: &cosmic::cosmic_theme::Theme,
-    ) -> cosmic::iced::Task<cosmic::Action<Self::Message>> {
+        new_theme: &lingmo::cosmic_theme::Theme,
+    ) -> lingmo::iced::Task<lingmo::Action<Self::Message>> {
         let old = self.core.system_theme().cosmic();
         let mut msgs = Vec::with_capacity(3);
 

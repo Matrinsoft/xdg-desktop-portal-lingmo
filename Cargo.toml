@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "xdg-desktop-portal-cosmic"
 version = "0.1.0"
 edition = "2024"
@@ -60,7 +60,7 @@ tracing-subscriber = "0.3.23"
 log-panics = { version = "2.1.0", features = ["with-backtrace"] }
 
 [dependencies.libcosmic]
-git = "https://github.com/Matrinsoft/libcosmic"
+git = "https://github.com/Matrinsoft/liblingmo"
 # TODO: a11y feature crashes file chooser dialog
 default-features = false
 features = [
@@ -75,7 +75,7 @@ features = [
 ]
 
 [workspace.dependencies]
-cosmic-config = { git = "https://github.com/Matrinsoft/libcosmic" }
+cosmic-config = { git = "https://github.com/Matrinsoft/liblingmo" }
 log = "0.4.29"
 serde = "1.0.228"
 
@@ -83,11 +83,11 @@ serde = "1.0.228"
 gst = { package = "gstreamer", version = "0.25.1" }
 clap = { version = "4.6.1", features = ["derive"] }
 
-# [patch."https://github.com/Matrinsoft/libcosmic"]
-# libcosmic = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
-# cosmic-config = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
-# iced_futures = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
-# libcosmic = { path = "../libcosmic" }
+# [patch."https://github.com/Matrinsoft/liblingmo"]
+# liblingmo = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
+# cosmic-config = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
+# iced_futures = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
+# liblingmo = { path = "../libcosmic" }
 # cosmic-config = { path = "../libcosmic/cosmic-config" }
 # cosmic-theme = { path = "../libcosmic/cosmic-theme" }
 

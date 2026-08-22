@@ -1,5 +1,5 @@
-use cosmic::iced::window;
-use cosmic::{action, widget};
+use lingmo::iced::window;
+use lingmo::{action, widget};
 use cosmic_files::dialog::{
     DialogChoice, DialogChoiceOption, DialogFilter, DialogFilterPattern, DialogKind, DialogMessage,
     DialogResult, DialogSettings,
@@ -254,15 +254,15 @@ pub(crate) struct Args {
     pub tx: Sender<PortalResponse<FileChooserResult>>,
 }
 
-fn map_msg(id: window::Id, message: cosmic::Action<Msg>) -> cosmic::Action<AppMsg> {
+fn map_msg(id: window::Id, message: lingmo::Action<Msg>) -> lingmo::Action<AppMsg> {
     match message {
-        cosmic::Action::App(msg) => cosmic::Action::App(AppMsg::FileChooser(id, msg)),
-        cosmic::Action::Cosmic(cosmic_message) => cosmic::Action::Cosmic(cosmic_message),
-        cosmic::Action::None => cosmic::Action::None,
+        lingmo::Action::App(msg) => lingmo::Action::App(AppMsg::FileChooser(id, msg)),
+        lingmo::Action::Cosmic(cosmic_message) => lingmo::Action::Cosmic(cosmic_message),
+        lingmo::Action::None => lingmo::Action::None,
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> cosmic::Element<'_, AppMsg> {
+pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> lingmo::Element<'_, AppMsg> {
     match portal.file_choosers.get(&id) {
         Some((_args, dialog)) => dialog.view(id).map(move |msg| AppMsg::FileChooser(id, msg)),
         None => {
@@ -282,7 +282,7 @@ fn file_chooser_update_msg(
     args: Args,
     dialog: Dialog,
     dialog_res: DialogResult,
-) -> cosmic::Task<cosmic::Action<AppMsg>> {
+) -> lingmo::Task<lingmo::Action<AppMsg>> {
     tracing::debug!("file chooser result {:?}", dialog_res);
     let response = match dialog_res {
         DialogResult::Cancel => PortalResponse::Cancelled,
@@ -349,7 +349,7 @@ fn file_chooser_update_msg(
             }
         }
     };
-    cosmic::Task::perform(
+    lingmo::Task::perform(
         async move {
             let _ = args.tx.send(response).await;
             action::none()
@@ -362,7 +362,7 @@ pub fn update_msg(
     portal: &mut CosmicPortal,
     id: window::Id,
     msg: Msg,
-) -> cosmic::Task<cosmic::Action<AppMsg>> {
+) -> lingmo::Task<lingmo::Action<AppMsg>> {
     match msg {
         Msg::DialogMessage(dialog_msg) => match portal.file_choosers.get_mut(&id) {
             Some((_args, dialog)) => dialog.update(dialog_msg).map(move |msg| map_msg(id, msg)),
@@ -375,7 +375,7 @@ pub fn update_msg(
                     return dialog.update(dialog_msg).map(move |msg| map_msg(id, msg));
                 }
                 tracing::warn!("no file chooser dialog with ID {id:?}");
-                cosmic::Task::none()
+                lingmo::Task::none()
             }
         },
         Msg::DialogResult(dialog_res) => match portal.file_choosers.remove(&id) {
@@ -390,20 +390,20 @@ pub fn update_msg(
                     .find_map(|(k, (_args, dialog))| dialog.contains_surface(&id).then_some(*k))
                 else {
                     tracing::warn!("no file chooser dialog with ID {id:?}");
-                    return cosmic::Task::none();
+                    return lingmo::Task::none();
                 };
 
                 if let Some((args, dialog)) = portal.file_choosers.remove(&k) {
                     return file_chooser_update_msg(args, dialog, dialog_res);
                 }
                 tracing::warn!("no file chooser dialog with ID {id:?}");
-                cosmic::Task::none()
+                lingmo::Task::none()
             }
         },
     }
 }
 
-pub fn update_args(portal: &mut CosmicPortal, args: Args) -> cosmic::Task<cosmic::Action<AppMsg>> {
+pub fn update_args(portal: &mut CosmicPortal, args: Args) -> lingmo::Task<lingmo::Action<AppMsg>> {
     let mut cmds = Vec::with_capacity(2);
 
     let kind = match &args.options {
@@ -503,5 +503,5 @@ pub fn update_args(portal: &mut CosmicPortal, args: Args) -> cosmic::Task<cosmic
     }
     let id = dialog.window_id();
     portal.file_choosers.insert(id, (args, dialog));
-    cosmic::iced::Task::batch(cmds).map(move |msg| map_msg(id, msg))
+    lingmo::iced::Task::batch(cmds).map(move |msg| map_msg(id, msg))
 }

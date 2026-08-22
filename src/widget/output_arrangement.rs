@@ -3,14 +3,14 @@
 //! stacked screens appear that way. Each child is an ordinary button; this
 //! widget handles their placement and draws a name label over each one.
 
-use cosmic::iced::core::renderer::Quad;
-use cosmic::iced::core::widget::{Operation, Tree, tree};
-use cosmic::iced::core::{
+use lingmo::iced::core::renderer::Quad;
+use lingmo::iced::core::widget::{Operation, Tree, tree};
+use lingmo::iced::core::{
     self as core, Background, Border, Clipboard, Color, Event, Layout, Length, Pixels, Point,
     Rectangle, Renderer as _, Shell, Size, Vector, Widget, alignment, layout, mouse, overlay,
     renderer, text,
 };
-use cosmic::{Element, Renderer};
+use lingmo::{Element, Renderer};
 
 const LABEL_BAR_MIN: f32 = 14.0;
 const LABEL_BAR_MAX: f32 = 24.0;
@@ -48,7 +48,7 @@ struct State {
     hovered: Option<usize>,
 }
 
-impl<Msg> Widget<Msg, cosmic::Theme, Renderer> for OutputArrangement<'_, Msg> {
+impl<Msg> Widget<Msg, lingmo::Theme, Renderer> for OutputArrangement<'_, Msg> {
     fn tag(&self) -> tree::Tag {
         tree::Tag::of::<State>()
     }
@@ -101,7 +101,7 @@ impl<Msg> Widget<Msg, cosmic::Theme, Renderer> for OutputArrangement<'_, Msg> {
         &self,
         tree: &Tree,
         renderer: &mut Renderer,
-        theme: &cosmic::Theme,
+        theme: &lingmo::Theme,
         style: &renderer::Style,
         layout: Layout<'_>,
         cursor: mouse::Cursor,
@@ -208,7 +208,7 @@ impl<Msg> Widget<Msg, cosmic::Theme, Renderer> for OutputArrangement<'_, Msg> {
                         content: label.clone(),
                         size: Pixels(font_size),
                         line_height: text::LineHeight::Relative(1.0),
-                        font: cosmic::font::default(),
+                        font: lingmo::font::default(),
                         bounds: bar.size(),
                         align_x: text::Alignment::Center,
                         align_y: alignment::Vertical::Center,
@@ -328,7 +328,7 @@ impl<Msg> Widget<Msg, cosmic::Theme, Renderer> for OutputArrangement<'_, Msg> {
         renderer: &Renderer,
         viewport: &Rectangle,
         translation: Vector,
-    ) -> Option<overlay::Element<'b, Msg, cosmic::Theme, Renderer>> {
+    ) -> Option<overlay::Element<'b, Msg, lingmo::Theme, Renderer>> {
         overlay::from_children(
             &mut self.children,
             tree,
