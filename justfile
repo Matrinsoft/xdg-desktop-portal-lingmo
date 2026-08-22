@@ -62,8 +62,7 @@ install:
 vendor:
     rm -rf .cargo
     mkdir -p .cargo
-    cargo vendor | head -n -1 > .cargo/config.toml
-    echo 'directory = "vendor"' >> .cargo/config.toml
+    cargo vendor 2>/dev/null | awk '/^\[/{p=1} p' > .cargo/config.toml
     echo >> .cargo/config.toml
     echo '[env]' >> .cargo/config.toml
     if [ -n "${SOURCE_DATE_EPOCH}" ]; then \
