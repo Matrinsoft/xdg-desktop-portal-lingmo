@@ -26,13 +26,13 @@ image = "0.25"
 cosmic-bg-config = { git = "https://github.com/Matrinsoft/lingmo-background" }
 cosmic-portal-config = { path = "./cosmic-portal-config" }
 memmap2 = "0.9.10"
-# pipewire = { git = "https://github.com/Matrinsoft/pipewire-rs" }
+# pipewire = { git = "https://github.com/pop-os/pipewire-rs" }
 pipewire = { git = "https://gitlab.freedesktop.org/pipewire/pipewire-rs", features = [
     "v0_3_33",
 ] }
 png = "0.18"
 rustix = { version = "1.1", features = ["fs"] }
-# spa_sys = { package = "libspa-sys", git = "https://github.com/Matrinsoft/pipewire-rs" }
+# spa_sys = { package = "libspa-sys", git = "https://github.com/pop-os/pipewire-rs" }
 zbus = { version = "5.15.0", default-features = false, features = ["tokio"] }
 gbm = "0.18.0"
 wayland-protocols = "0.32.12"
