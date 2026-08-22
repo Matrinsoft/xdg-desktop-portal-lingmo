@@ -2,16 +2,16 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use lingmo::Element;
-use lingmo::cosmic_theme::Spacing;
-use lingmo::iced::core::gradient::Linear;
-use lingmo::iced::core::widget::Tree;
-use lingmo::iced::core::{
+use cosmic::Element;
+use cosmic::cosmic_theme::Spacing;
+use cosmic::iced::core::gradient::Linear;
+use cosmic::iced::core::widget::Tree;
+use cosmic::iced::core::{
     Alignment, Background, Border, ContentFit, Degrees, Layout, Length, Point, Size, layout,
     overlay,
 };
-use lingmo::iced::{self, window};
-use lingmo::widget::{
+use cosmic::iced::{self, window};
+use cosmic::widget::{
     self, button, divider, dropdown, icon, image, layer_container, row, space, svg, text,
 };
 use cosmic_bg_config::Source;
@@ -25,7 +25,7 @@ use super::output_selection::OutputSelection;
 use super::rectangle_selection::{DragState, RectangleSelection};
 
 pub struct ScreenshotSelection<'a, Msg> {
-    id: lingmo::widget::Id,
+    id: cosmic::widget::Id,
     pub choice: Choice,
     pub choices: Vec<Choice>,
     pub output_logical_geo: Vec<Rect>,
@@ -120,7 +120,7 @@ where
                                 .content_fit(ContentFit::ScaleDown),
                         )
                         .on_press(toplevel_chosen(output.name.clone(), i))
-                        .class(lingmo::theme::Button::Image),
+                        .class(cosmic::theme::Button::Image),
                     )
                     .align_x(Alignment::Center)
                     .width(Length::FillPortion(portion as u16))
@@ -157,12 +157,12 @@ where
                     layer_container(space::horizontal().width(Length::Fill))
                         .width(Length::Fill)
                         .height(Length::Fill)
-                        .class(lingmo::theme::Container::Custom(Box::new(move |_| {
+                        .class(cosmic::theme::Container::Custom(Box::new(move |_| {
                             let color = color.clone();
                             widget::container::Style {
                                 background: Some(match color {
                                     cosmic_bg_config::Color::Single(c) => Background::Color(
-                                        lingmo::iced::Color::from_rgba(c[0], c[1], c[2], 1.0),
+                                        cosmic::iced::Color::from_rgba(c[0], c[1], c[2], 1.0),
                                     ),
                                     cosmic_bg_config::Color::Gradient(
                                         cosmic_bg_config::Gradient { colors, radius },
@@ -175,12 +175,12 @@ where
                                         for &[r, g, b] in colors.iter() {
                                             linear = linear.add_stop(
                                                 stop,
-                                                lingmo::iced::Color::from_rgb(r, g, b),
+                                                cosmic::iced::Color::from_rgb(r, g, b),
                                             );
                                             stop += stop_increment;
                                         }
 
-                                        Background::Gradient(lingmo::iced::core::Gradient::Linear(
+                                        Background::Gradient(cosmic::iced::core::Gradient::Linear(
                                             linear,
                                         ))
                                     }
@@ -199,17 +199,17 @@ where
                 .into(),
             },
         };
-        let active_icon = lingmo::theme::Svg::Custom(Rc::new(|t| svg::Style {
+        let active_icon = cosmic::theme::Svg::Custom(Rc::new(|t| svg::Style {
             color: Some(t.cosmic().accent_color().into()),
         }));
         Self {
-            id: lingmo::widget::Id::unique(),
+            id: cosmic::widget::Id::unique(),
             choices: Vec::new(),
             output_logical_geo: Vec::new(),
             choice_labels: Vec::new(),
             bg_element,
             fg_element,
-            menu_element: lingmo::widget::container(
+            menu_element: cosmic::widget::container(
                 row![
                     row![
                         button::custom(
@@ -222,12 +222,12 @@ where
                                 if matches!(choice, Choice::Rectangle(..)) {
                                     active_icon.clone()
                                 } else {
-                                    lingmo::theme::Svg::default()
+                                    cosmic::theme::Svg::default()
                                 }
                             )
                         )
                         .selected(matches!(choice, Choice::Rectangle(..)))
-                        .class(lingmo::theme::Button::Icon)
+                        .class(cosmic::theme::Button::Icon)
                         .on_press(on_choice_change(Choice::Rectangle(
                             Rect::default(),
                             DragState::None
@@ -240,13 +240,13 @@ where
                             .class(if matches!(choice, Choice::Window(..)) {
                                 active_icon.clone()
                             } else {
-                                lingmo::theme::Svg::default()
+                                cosmic::theme::Svg::default()
                             })
                             .width(Length::Fixed(40.0))
                             .height(Length::Fixed(40.0))
                         )
                         .selected(matches!(choice, Choice::Window(..)))
-                        .class(lingmo::theme::Button::Icon)
+                        .class(cosmic::theme::Button::Icon)
                         .on_press(on_choice_change(Choice::Window(output.name.clone(), None)))
                         .padding(space_xs),
                         button::custom(
@@ -259,12 +259,12 @@ where
                                 if matches!(choice, Choice::Output(..)) {
                                     active_icon.clone()
                                 } else {
-                                    lingmo::theme::Svg::default()
+                                    cosmic::theme::Svg::default()
                                 }
                             )
                         )
                         .selected(matches!(choice, Choice::Output(..)))
-                        .class(lingmo::theme::Button::Icon)
+                        .class(cosmic::theme::Button::Icon)
                         .on_press(on_choice_change(Choice::Output(output.name.clone())))
                         .padding(space_xs)
                     ]
@@ -292,16 +292,16 @@ where
                             .width(Length::Fixed(40.0))
                             .height(Length::Fixed(40.0))
                     )
-                    .class(lingmo::theme::Button::Icon)
+                    .class(cosmic::theme::Button::Icon)
                     .on_press(on_cancel),
                 ]
                 .align_y(Alignment::Center)
                 .spacing(space_s)
                 .padding([space_xxs, space_s, space_xxs, space_s]),
             )
-            .class(lingmo::theme::Container::Custom(Box::new(|theme| {
+            .class(cosmic::theme::Container::Custom(Box::new(|theme| {
                 let cosmic = theme.cosmic();
-                lingmo::iced::widget::container::Style {
+                cosmic::iced::widget::container::Style {
                     background: Some(Background::Color(
                         // TODO support blur effect in iced?
                         cosmic.background(false).component.base.into(),
@@ -320,10 +320,10 @@ where
     }
 }
 
-impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
+impl<'a, Msg> cosmic::widget::Widget<Msg, cosmic::Theme, cosmic::Renderer>
     for ScreenshotSelection<'a, Msg>
 {
-    fn children(&self) -> Vec<lingmo::iced::core::widget::Tree> {
+    fn children(&self) -> Vec<cosmic::iced::core::widget::Tree> {
         vec![
             Tree::new(&self.bg_element),
             Tree::new(&self.fg_element),
@@ -331,7 +331,7 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
         ]
     }
 
-    fn diff(&mut self, tree: &mut lingmo::iced::core::widget::Tree) {
+    fn diff(&mut self, tree: &mut cosmic::iced::core::widget::Tree) {
         tree.diff_children(&mut [
             &mut self.bg_element,
             &mut self.fg_element,
@@ -343,10 +343,10 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
         &'b mut self,
         state: &'b mut Tree,
         layout: Layout<'b>,
-        renderer: &lingmo::Renderer,
-        viewport: &lingmo::iced::core::Rectangle,
+        renderer: &cosmic::Renderer,
+        viewport: &cosmic::iced::core::Rectangle,
         translation: iced::Vector,
-    ) -> Option<overlay::Element<'b, Msg, lingmo::Theme, lingmo::Renderer>> {
+    ) -> Option<overlay::Element<'b, Msg, cosmic::Theme, cosmic::Renderer>> {
         let children = [
             &mut self.bg_element,
             &mut self.fg_element,
@@ -367,14 +367,14 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
 
     fn update(
         &mut self,
-        tree: &mut lingmo::iced::core::widget::Tree,
-        event: &lingmo::iced::core::Event,
+        tree: &mut cosmic::iced::core::widget::Tree,
+        event: &cosmic::iced::core::Event,
         layout: Layout<'_>,
-        cursor: lingmo::iced::core::mouse::Cursor,
-        renderer: &lingmo::Renderer,
-        clipboard: &mut dyn lingmo::iced::core::Clipboard,
-        shell: &mut lingmo::iced::core::Shell<'_, Msg>,
-        viewport: &lingmo::iced::core::Rectangle,
+        cursor: cosmic::iced::core::mouse::Cursor,
+        renderer: &cosmic::Renderer,
+        clipboard: &mut dyn cosmic::iced::core::Clipboard,
+        shell: &mut cosmic::iced::core::Shell<'_, Msg>,
+        viewport: &cosmic::iced::core::Rectangle,
     ) {
         let children = [
             &mut self.bg_element,
@@ -400,10 +400,10 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
         &self,
         state: &Tree,
         layout: Layout<'_>,
-        cursor: lingmo::iced::core::mouse::Cursor,
-        viewport: &lingmo::iced::core::Rectangle,
-        renderer: &lingmo::Renderer,
-    ) -> lingmo::iced::core::mouse::Interaction {
+        cursor: cosmic::iced::core::mouse::Cursor,
+        viewport: &cosmic::iced::core::Rectangle,
+        renderer: &cosmic::Renderer,
+    ) -> cosmic::iced::core::mouse::Interaction {
         let children = [&self.bg_element, &self.fg_element, &self.menu_element];
         let layout = layout.children().collect::<Vec<_>>();
         for (i, (layout, child)) in layout.into_iter().zip(children).enumerate().rev() {
@@ -415,15 +415,15 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
                 return interaction;
             }
         }
-        lingmo::iced::core::mouse::Interaction::default()
+        cosmic::iced::core::mouse::Interaction::default()
     }
 
     fn operate(
         &mut self,
-        tree: &mut lingmo::iced::core::widget::Tree,
+        tree: &mut cosmic::iced::core::widget::Tree,
         layout: Layout<'_>,
-        renderer: &lingmo::Renderer,
-        operation: &mut dyn lingmo::widget::Operation<()>,
+        renderer: &cosmic::Renderer,
+        operation: &mut dyn cosmic::widget::Operation<()>,
     ) {
         let layout = layout.children().collect::<Vec<_>>();
         let children = [
@@ -439,11 +439,11 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
         }
     }
 
-    fn id(&self) -> Option<lingmo::widget::Id> {
+    fn id(&self) -> Option<cosmic::widget::Id> {
         Some(self.id.clone())
     }
 
-    fn set_id(&mut self, _id: lingmo::widget::Id) {
+    fn set_id(&mut self, _id: cosmic::widget::Id) {
         self.id = _id;
     }
 
@@ -453,10 +453,10 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
 
     fn layout(
         &mut self,
-        tree: &mut lingmo::iced::core::widget::Tree,
-        renderer: &lingmo::Renderer,
-        limits: &lingmo::iced::core::layout::Limits,
-    ) -> lingmo::iced::core::layout::Node {
+        tree: &mut cosmic::iced::core::widget::Tree,
+        renderer: &cosmic::Renderer,
+        limits: &cosmic::iced::core::layout::Limits,
+    ) -> cosmic::iced::core::layout::Node {
         let children = &mut tree.children;
         let bg_image = &mut children[0];
         let bg_node = self
@@ -485,15 +485,15 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
 
     fn draw(
         &self,
-        tree: &lingmo::iced::core::widget::Tree,
-        renderer: &mut lingmo::Renderer,
-        theme: &lingmo::Theme,
-        style: &lingmo::iced::core::renderer::Style,
-        layout: lingmo::iced::core::Layout<'_>,
-        cursor: lingmo::iced::core::mouse::Cursor,
-        viewport: &lingmo::iced::core::Rectangle,
+        tree: &cosmic::iced::core::widget::Tree,
+        renderer: &mut cosmic::Renderer,
+        theme: &cosmic::Theme,
+        style: &cosmic::iced::core::renderer::Style,
+        layout: cosmic::iced::core::Layout<'_>,
+        cursor: cosmic::iced::core::mouse::Cursor,
+        viewport: &cosmic::iced::core::Rectangle,
     ) {
-        use lingmo::iced::core::Renderer;
+        use cosmic::iced::core::Renderer;
         let children = &[&self.bg_element, &self.fg_element, &self.menu_element];
         let mut children = layout.children().zip(children).enumerate();
         {
@@ -517,10 +517,10 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
 
     fn drag_destinations(
         &self,
-        state: &lingmo::iced::core::widget::Tree,
-        layout: lingmo::iced::core::Layout<'_>,
-        renderer: &lingmo::Renderer,
-        dnd_rectangles: &mut lingmo::iced::core::clipboard::DndDestinationRectangles,
+        state: &cosmic::iced::core::widget::Tree,
+        layout: cosmic::iced::core::Layout<'_>,
+        renderer: &cosmic::Renderer,
+        dnd_rectangles: &mut cosmic::iced::core::clipboard::DndDestinationRectangles,
     ) {
         let children = &[&self.bg_element, &self.fg_element, &self.menu_element];
         for (i, (layout, child)) in layout.children().zip(children).enumerate() {
@@ -532,11 +532,11 @@ impl<'a, Msg> lingmo::widget::Widget<Msg, lingmo::Theme, lingmo::Renderer>
     }
 }
 
-impl<'a, Message> From<ScreenshotSelection<'a, Message>> for lingmo::Element<'a, Message>
+impl<'a, Message> From<ScreenshotSelection<'a, Message>> for cosmic::Element<'a, Message>
 where
     Message: 'static + Clone,
 {
-    fn from(w: ScreenshotSelection<'a, Message>) -> lingmo::Element<'a, Message> {
+    fn from(w: ScreenshotSelection<'a, Message>) -> cosmic::Element<'a, Message> {
         Element::new(w)
     }
 }

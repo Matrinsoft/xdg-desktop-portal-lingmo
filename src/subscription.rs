@@ -3,8 +3,8 @@
 use std::any::TypeId;
 use std::hash::Hash;
 
-use lingmo::cosmic_theme::palette::Srgba;
-use lingmo::iced::Subscription;
+use cosmic::cosmic_theme::palette::Srgba;
+use cosmic::iced::Subscription;
 use futures::{SinkExt, StreamExt, future};
 use tokio::sync::mpsc::Receiver;
 use zbus::{Connection, fdo, zvariant};
@@ -40,7 +40,7 @@ pub enum State {
 
 pub(crate) fn portal_subscription(
     helper: wayland::WaylandHelper,
-) -> lingmo::iced::Subscription<Event> {
+) -> cosmic::iced::Subscription<Event> {
     struct ConfigSubscription;
     struct Wrapper {
         helper: wayland::WaylandHelper,
@@ -53,7 +53,7 @@ pub(crate) fn portal_subscription(
     Subscription::batch([
         Subscription::run_with(Wrapper { helper }, |Wrapper { helper }| {
             let helper = helper.clone();
-            lingmo::iced::stream::channel(10, |mut output| async move {
+            cosmic::iced::stream::channel(10, |mut output| async move {
                 let mut state = State::Init;
                 loop {
                     if let Err(err) = process_changes(&mut state, &mut output, &helper).await {

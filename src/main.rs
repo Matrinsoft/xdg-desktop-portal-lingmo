@@ -1,4 +1,4 @@
-use lingmo::cosmic_theme::palette::Srgba;
+use cosmic::cosmic_theme::palette::Srgba;
 use futures::future::{AbortHandle, abortable};
 use std::collections::HashMap;
 use std::future::Future;
@@ -216,7 +216,7 @@ struct Settings {
 
 impl Settings {
     pub fn new() -> Self {
-        let theme = lingmo::theme::system_preference();
+        let theme = cosmic::theme::system_preference();
         let cosmic = theme.cosmic();
         Self {
             contrast: if cosmic.is_high_contrast {
@@ -331,7 +331,7 @@ impl Settings {
     }
 }
 
-fn main() -> lingmo::iced::Result {
+fn main() -> cosmic::iced::Result {
     let trace = tracing_subscriber::registry();
     let env_filter = EnvFilter::builder()
         .with_default_directive(LevelFilter::WARN.into())

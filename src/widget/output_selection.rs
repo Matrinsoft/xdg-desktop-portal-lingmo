@@ -1,10 +1,10 @@
-use lingmo::iced::Limits;
-use lingmo::iced::core::layout::Node;
-use lingmo::iced::core::renderer::Quad;
-use lingmo::iced::core::widget::Tree;
-use lingmo::iced::core::widget::tree::{self, State};
-use lingmo::iced::core::{Background, Border, Color, Length, Renderer, Shadow, Size, mouse};
-use lingmo::widget::Widget;
+use cosmic::iced::Limits;
+use cosmic::iced::core::layout::Node;
+use cosmic::iced::core::renderer::Quad;
+use cosmic::iced::core::widget::Tree;
+use cosmic::iced::core::widget::tree::{self, State};
+use cosmic::iced::core::{Background, Border, Color, Length, Renderer, Shadow, Size, mouse};
+use cosmic::widget::Widget;
 
 pub struct OutputSelection<Msg> {
     on_enter: Msg,
@@ -17,20 +17,20 @@ impl<Msg> OutputSelection<Msg> {
     }
 }
 
-impl<Msg: Clone + 'static> Widget<Msg, lingmo::Theme, lingmo::Renderer> for OutputSelection<Msg> {
+impl<Msg: Clone + 'static> Widget<Msg, cosmic::Theme, cosmic::Renderer> for OutputSelection<Msg> {
     fn size(&self) -> Size<Length> {
         Size::new(Length::Fill, Length::Fill)
     }
 
-    fn state(&self) -> lingmo::iced::core::widget::tree::State {
+    fn state(&self) -> cosmic::iced::core::widget::tree::State {
         State::new(MyState::default())
     }
 
-    fn tag(&self) -> lingmo::iced::core::widget::tree::Tag {
+    fn tag(&self) -> cosmic::iced::core::widget::tree::Tag {
         tree::Tag::of::<MyState>()
     }
 
-    fn layout(&mut self, _tree: &mut Tree, _renderer: &lingmo::Renderer, limits: &Limits) -> Node {
+    fn layout(&mut self, _tree: &mut Tree, _renderer: &cosmic::Renderer, limits: &Limits) -> Node {
         let limits = limits.width(Length::Fill).height(Length::Fill);
         Node::new(limits.resolve(Length::Fill, Length::Fill, Size::ZERO))
     }
@@ -38,12 +38,12 @@ impl<Msg: Clone + 'static> Widget<Msg, lingmo::Theme, lingmo::Renderer> for Outp
     fn draw(
         &self,
         tree: &Tree,
-        renderer: &mut lingmo::Renderer,
-        theme: &lingmo::Theme,
-        _style: &lingmo::iced::core::renderer::Style,
-        layout: lingmo::iced::core::Layout<'_>,
-        _cursor: lingmo::iced::core::mouse::Cursor,
-        _viewport: &lingmo::iced::core::Rectangle,
+        renderer: &mut cosmic::Renderer,
+        theme: &cosmic::Theme,
+        _style: &cosmic::iced::core::renderer::Style,
+        layout: cosmic::iced::core::Layout<'_>,
+        _cursor: cosmic::iced::core::mouse::Cursor,
+        _viewport: &cosmic::iced::core::Rectangle,
     ) {
         let cosmic = theme.cosmic();
         let radius_s = cosmic.radius_s();
@@ -93,28 +93,28 @@ impl<Msg: Clone + 'static> Widget<Msg, lingmo::Theme, lingmo::Renderer> for Outp
     fn mouse_interaction(
         &self,
         _state: &Tree,
-        layout: lingmo::iced::core::Layout<'_>,
-        cursor: lingmo::iced::core::mouse::Cursor,
-        _viewport: &lingmo::iced::core::Rectangle,
-        _renderer: &lingmo::Renderer,
-    ) -> lingmo::iced::core::mouse::Interaction {
+        layout: cosmic::iced::core::Layout<'_>,
+        cursor: cosmic::iced::core::mouse::Cursor,
+        _viewport: &cosmic::iced::core::Rectangle,
+        _renderer: &cosmic::Renderer,
+    ) -> cosmic::iced::core::mouse::Interaction {
         if cursor.is_over(layout.bounds()) {
-            lingmo::iced::core::mouse::Interaction::Pointer
+            cosmic::iced::core::mouse::Interaction::Pointer
         } else {
-            lingmo::iced::core::mouse::Interaction::default()
+            cosmic::iced::core::mouse::Interaction::default()
         }
     }
 
     fn update(
         &mut self,
         state: &mut Tree,
-        event: &lingmo::iced::core::Event,
-        layout: lingmo::iced::core::Layout<'_>,
-        cursor: lingmo::iced::core::mouse::Cursor,
-        _renderer: &lingmo::Renderer,
-        _clipboard: &mut dyn lingmo::iced::core::Clipboard,
-        shell: &mut lingmo::iced::core::Shell<'_, Msg>,
-        _viewport: &lingmo::iced::core::Rectangle,
+        event: &cosmic::iced::core::Event,
+        layout: cosmic::iced::core::Layout<'_>,
+        cursor: cosmic::iced::core::mouse::Cursor,
+        _renderer: &cosmic::Renderer,
+        _clipboard: &mut dyn cosmic::iced::core::Clipboard,
+        shell: &mut cosmic::iced::core::Shell<'_, Msg>,
+        _viewport: &cosmic::iced::core::Rectangle,
     ) {
         // update hover state
         let my_state = state.state.downcast_mut::<MyState>();
@@ -122,15 +122,15 @@ impl<Msg: Clone + 'static> Widget<Msg, lingmo::Theme, lingmo::Renderer> for Outp
         let changed = my_state.hovered != hovered;
         my_state.hovered = hovered;
 
-        if let lingmo::iced::core::Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left)) =
+        if let cosmic::iced::core::Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left)) =
             event
         {
             shell.publish(self.on_press.clone());
             shell.capture_event();
         }
         if changed
-            && let lingmo::iced::core::Event::Mouse(mouse::Event::CursorMoved { .. })
-            | lingmo::iced::core::Event::Mouse(mouse::Event::CursorEntered) = event
+            && let cosmic::iced::core::Event::Mouse(mouse::Event::CursorMoved { .. })
+            | cosmic::iced::core::Event::Mouse(mouse::Event::CursorEntered) = event
         {
             shell.publish(self.on_enter.clone());
             shell.capture_event();
@@ -144,11 +144,11 @@ pub struct MyState {
     pub focused: bool,
 }
 
-impl<'a, Message> From<OutputSelection<Message>> for lingmo::Element<'a, Message>
+impl<'a, Message> From<OutputSelection<Message>> for cosmic::Element<'a, Message>
 where
     Message: 'static + Clone,
 {
-    fn from(w: OutputSelection<Message>) -> lingmo::Element<'a, Message> {
-        lingmo::Element::new(w)
+    fn from(w: OutputSelection<Message>) -> cosmic::Element<'a, Message> {
+        cosmic::Element::new(w)
     }
 }

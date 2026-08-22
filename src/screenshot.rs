@@ -1,16 +1,16 @@
 #![allow(dead_code, unused_variables)]
 
-use lingmo::cosmic_config::CosmicConfigEntry;
-use lingmo::iced::clipboard::mime::AsMimeTypes;
-use lingmo::iced::keyboard::Key;
-use lingmo::iced::keyboard::key::Named;
-use lingmo::iced::platform_specific::shell::commands::layer_surface::destroy_layer_surface;
-use lingmo::iced::runtime::clipboard;
-use lingmo::iced::runtime::platform_specific::wayland::layer_surface::{
+use cosmic::cosmic_config::CosmicConfigEntry;
+use cosmic::iced::clipboard::mime::AsMimeTypes;
+use cosmic::iced::keyboard::Key;
+use cosmic::iced::keyboard::key::Named;
+use cosmic::iced::platform_specific::shell::commands::layer_surface::destroy_layer_surface;
+use cosmic::iced::runtime::clipboard;
+use cosmic::iced::runtime::platform_specific::wayland::layer_surface::{
     IcedOutput, SctkLayerSurfaceSettings,
 };
-use lingmo::iced::{Length, Limits, window};
-use lingmo::widget::space;
+use cosmic::iced::{Length, Limits, window};
+use cosmic::widget::space;
 use cosmic_client_toolkit::sctk::shell::wlr_layer::{Anchor, KeyboardInteractivity, Layer};
 use futures::stream::{FuturesUnordered, StreamExt};
 use image::RgbaImage;
@@ -36,13 +36,13 @@ use crate::{PortalResponse, fl, subscription};
 #[derive(Clone, Debug)]
 pub struct ScreenshotImage {
     pub rgba: RgbaImage,
-    pub handle: lingmo::widget::image::Handle,
+    pub handle: cosmic::widget::image::Handle,
 }
 
 impl ScreenshotImage {
     fn new<T: AsFd>(img: ShmImage<T>) -> anyhow::Result<Self> {
         let rgba = img.image_transformed()?;
-        let handle = lingmo::widget::image::Handle::from_rgba(
+        let handle = cosmic::widget::image::Handle::from_rgba(
             rgba.width(),
             rgba.height(),
             rgba.clone().into_vec(),
@@ -583,7 +583,7 @@ impl Screenshot {
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> lingmo::Element<'_, Msg> {
+pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> cosmic::Element<'_, Msg> {
     let Some((i, output)) = portal.outputs.iter().enumerate().find(|(i, o)| o.id == id) else {
         return space::horizontal().width(Length::Fixed(1.0)).into();
     };
@@ -647,17 +647,17 @@ pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> lingmo::Element<'_,
 pub fn update_msg(
     portal: &mut CosmicPortal,
     msg: Msg,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     match msg {
         Msg::Capture => {
-            let mut cmds: Vec<lingmo::Task<lingmo::Action<crate::app::Msg>>> = portal
+            let mut cmds: Vec<cosmic::Task<cosmic::Action<crate::app::Msg>>> = portal
                 .outputs
                 .iter()
                 .map(|o| destroy_layer_surface(o.id))
                 .collect();
             let Some(args) = portal.screenshot_args.take() else {
                 tracing::error!("Failed to find screenshot Args for Capture message.");
-                return lingmo::Task::batch(cmds);
+                return cosmic::Task::batch(cmds);
             };
             let outputs = portal.outputs.clone();
             let Args {
@@ -764,14 +764,14 @@ pub fn update_msg(
                     tracing::error!("Failed to send screenshot event");
                 }
             });
-            lingmo::Task::batch(cmds)
+            cosmic::Task::batch(cmds)
         }
         Msg::CaptureWithLocation(location) => {
             if let Some(args) = portal.screenshot_args.as_mut() {
                 args.location = location;
             } else {
                 tracing::error!("Failed to find screenshot Args for CaptureWithLocation message.");
-                return lingmo::Task::none();
+                return cosmic::Task::none();
             }
             update_msg(portal, Msg::Capture)
         }
@@ -779,7 +779,7 @@ pub fn update_msg(
             let cmds = portal.outputs.iter().map(|o| destroy_layer_surface(o.id));
             let Some(args) = portal.screenshot_args.take() else {
                 tracing::error!("Failed to find screenshot Args for Cancel message.");
-                return lingmo::Task::batch(cmds);
+                return cosmic::Task::batch(cmds);
             };
             let Args { tx, .. } = args;
             tokio::spawn(async move {
@@ -788,7 +788,7 @@ pub fn update_msg(
                 }
             });
 
-            lingmo::Task::batch(cmds)
+            cosmic::Task::batch(cmds)
         }
         Msg::Choice(c) => {
             let choice = (&c).into();
@@ -813,7 +813,7 @@ pub fn update_msg(
                 tracing::error!("Failed to find screenshot Args for Choice message.");
             }
             if should_save_config {
-                lingmo::task::message(crate::app::Msg::ConfigSetScreenshot(
+                cosmic::task::message(crate::app::Msg::ConfigSetScreenshot(
                     config::screenshot::Screenshot {
                         choice,
                         last_rectangle: last_rect,
@@ -821,7 +821,7 @@ pub fn update_msg(
                     },
                 ))
             } else {
-                lingmo::Task::none()
+                cosmic::Task::none()
             }
         }
         Msg::OutputChanged(wl_output) => {
@@ -841,7 +841,7 @@ pub fn update_msg(
                 );
             }
             portal.active_output = Some(wl_output);
-            lingmo::Task::none()
+            cosmic::Task::none()
         }
         Msg::WindowChosen(name, i) => {
             if let Some(args) = portal.screenshot_args.as_mut() {
@@ -866,7 +866,7 @@ pub fn update_msg(
                     _ => args.location,
                 };
                 args.location = loc;
-                lingmo::task::message(crate::app::Msg::ConfigSetScreenshot(
+                cosmic::task::message(crate::app::Msg::ConfigSetScreenshot(
                     config::screenshot::Screenshot {
                         save_location: loc,
                         choice: (&mut portal.config.screenshot.choice).into(),
@@ -875,7 +875,7 @@ pub fn update_msg(
                 ))
             } else {
                 tracing::error!("Failed to find screenshot Args for Location message.");
-                lingmo::Task::none()
+                cosmic::Task::none()
             }
         }
     }
@@ -884,7 +884,7 @@ pub fn update_msg(
 pub fn update_args(
     portal: &mut CosmicPortal,
     args: Args,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let Args {
         handle,
         app_id,
@@ -906,11 +906,11 @@ pub fn update_args(
         );
         tracing::warn!("Screenshot outputs: {:?}", portal.outputs);
         tracing::warn!("Screenshot images: {:?}", images.keys().collect::<Vec<_>>());
-        return lingmo::Task::none();
+        return cosmic::Task::none();
     }
 
     // update output bg sources
-    if let Ok(c) = lingmo::cosmic_config::Config::new_state(
+    if let Ok(c) = cosmic::cosmic_config::Config::new_state(
         cosmic_bg_config::NAME,
         cosmic_bg_config::state::State::version(),
     ) {
@@ -955,8 +955,8 @@ pub fn update_args(
                     let id = *id;
                     let output = output.clone();
                     let name = name.clone();
-                    lingmo::surface::surface_task::<crate::app::Msg>(
-                lingmo::surface::action::simple_layer_shell::<crate::app::Msg>(
+                    cosmic::surface::surface_task::<crate::app::Msg>(
+                cosmic::surface::action::simple_layer_shell::<crate::app::Msg>(
                     Default::default,
                         move || {
                             SctkLayerSurfaceSettings {
@@ -973,15 +973,15 @@ pub fn update_args(
                                     ..Default::default()
                                 }
                             },
-                        None::<fn() -> lingmo::Element<'static, lingmo::Action<crate::app::Msg>>>,
+                        None::<fn() -> cosmic::Element<'static, cosmic::Action<crate::app::Msg>>>,
                         ),
                     )
                 },
             )
             .collect();
-        lingmo::Task::batch(cmds)
+        cosmic::Task::batch(cmds)
     } else {
         tracing::info!("Existing screenshot args updated");
-        lingmo::Task::none()
+        cosmic::Task::none()
     }
 }

@@ -1,15 +1,15 @@
 #![allow(dead_code, unused_variables)]
 
-use lingmo::iced::keyboard::Key;
-use lingmo::iced::keyboard::key::Named;
-use lingmo::iced::platform_specific::shell::commands::layer_surface::destroy_layer_surface;
-use lingmo::iced::runtime::platform_specific::wayland::layer_surface::{
+use cosmic::iced::keyboard::Key;
+use cosmic::iced::keyboard::key::Named;
+use cosmic::iced::platform_specific::shell::commands::layer_surface::destroy_layer_surface;
+use cosmic::iced::runtime::platform_specific::wayland::layer_surface::{
     IcedOutput, SctkLayerSurfaceSettings,
 };
-use lingmo::iced::widget::{column, row};
-use lingmo::iced::{Alignment, window};
-use lingmo::widget::autosize::autosize;
-use lingmo::widget::{self, Column, Id, button, dropdown, icon, text};
+use cosmic::iced::widget::{column, row};
+use cosmic::iced::{Alignment, window};
+use cosmic::widget::autosize::autosize;
+use cosmic::widget::{self, Column, Id, button, dropdown, icon, text};
 use std::collections::HashMap;
 use tokio::sync::mpsc::Sender;
 use zbus::zvariant;
@@ -132,7 +132,7 @@ pub(crate) struct AccessDialogArgs {
 }
 
 impl AccessDialogArgs {
-    pub(crate) fn get_surface(&mut self) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+    pub(crate) fn get_surface(&mut self) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
         if self.options.modal.unwrap_or_default() {
             // create a modal surface
             let (id, task) = window::open(window::Settings {
@@ -145,8 +145,8 @@ impl AccessDialogArgs {
             // create a layer surface
             let id = window::Id::unique();
             self.access_id = id;
-            lingmo::surface::surface_task::<crate::app::Msg>(
-                lingmo::surface::action::simple_layer_shell::<crate::app::Msg>(
+            cosmic::surface::surface_task::<crate::app::Msg>(
+                cosmic::surface::action::simple_layer_shell::<crate::app::Msg>(
                     Default::default,
                     move || {
                         SctkLayerSurfaceSettings {
@@ -161,13 +161,13 @@ impl AccessDialogArgs {
                         ..Default::default()
                     }
                     },
-                    None::<fn() -> lingmo::Element<'static, lingmo::Action<crate::app::Msg>>>,
+                    None::<fn() -> cosmic::Element<'static, cosmic::Action<crate::app::Msg>>>,
                 ),
             )
         }
     }
 
-    pub(crate) fn destroy_surface(&self) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+    pub(crate) fn destroy_surface(&self) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
         if self.options.modal.unwrap_or_default() {
             window::close(self.access_id)
         } else {
@@ -176,7 +176,7 @@ impl AccessDialogArgs {
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
+pub(crate) fn view(portal: &CosmicPortal) -> cosmic::Element<'_, Msg> {
     let spacing = portal.core.system_theme().cosmic().spacing;
     let Some(args) = portal.access_args.as_ref() else {
         return text("Oops, no access dialog args").into();
@@ -227,7 +227,7 @@ pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
             .unwrap_or_else(|| fl!("allow")),
     )
     .on_press(Msg::Allow)
-    .class(lingmo::theme::Button::Suggested);
+    .class(cosmic::theme::Button::Suggested);
 
     let content = KeyboardWrapper::new(
         widget::dialog()
@@ -253,14 +253,14 @@ pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
 pub fn update_msg(
     portal: &mut CosmicPortal,
     msg: Msg,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     match msg {
         Msg::Allow => {
             let args = portal.access_args.take().unwrap();
             let tx = args.tx.clone();
             let choices = args.active_choices.clone().into_iter().collect();
-            lingmo::Task::batch([
-                lingmo::task::future::<(), ()>(async move {
+            cosmic::Task::batch([
+                cosmic::task::future::<(), ()>(async move {
                     _ = tx
                         .send(PortalResponse::Success(AccessDialogResult { choices }))
                         .await;
@@ -272,8 +272,8 @@ pub fn update_msg(
         Msg::Cancel => {
             let args = portal.access_args.take().unwrap();
             let tx = args.tx.clone();
-            lingmo::Task::batch([
-                lingmo::task::future::<(), ()>(async move {
+            cosmic::Task::batch([
+                cosmic::task::future::<(), ()>(async move {
                     _ = tx
                         .send(PortalResponse::Cancelled::<AccessDialogResult>)
                         .await;
@@ -290,21 +290,21 @@ pub fn update_msg(
                 args.active_choices
                     .insert(choice.0.clone(), option_id.clone());
             }
-            lingmo::iced::Task::none()
+            cosmic::iced::Task::none()
         }
     }
 }
 pub fn update_args(
     portal: &mut CosmicPortal,
     mut msg: AccessDialogArgs,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let mut cmds = Vec::with_capacity(2);
     if let Some(args) = portal.access_args.take() {
         // destroy surface and recreate
         cmds.push(args.destroy_surface());
         // send cancelled response
         cmds.push(
-            lingmo::task::future::<(), ()>(async move {
+            cosmic::task::future::<(), ()>(async move {
                 let _ = args
                     .tx
                     .send(PortalResponse::Cancelled::<AccessDialogResult>)
@@ -316,5 +316,5 @@ pub fn update_args(
 
     cmds.push(msg.get_surface());
     portal.access_args = Some(msg);
-    lingmo::iced::Task::batch(cmds)
+    cosmic::iced::Task::batch(cmds)
 }

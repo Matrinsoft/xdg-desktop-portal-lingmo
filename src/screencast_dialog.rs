@@ -4,19 +4,19 @@ use crate::wayland::{CaptureSource, WaylandHelper};
 use crate::widget::keyboard_wrapper::KeyboardWrapper;
 use ashpd::desktop::screencast::SourceType;
 use ashpd::enumflags2::BitFlags;
-use lingmo::desktop::IconSourceExt;
-use lingmo::iced::keyboard::Key;
-use lingmo::iced::keyboard::key::Named;
-use lingmo::iced::{self, window};
+use cosmic::desktop::IconSourceExt;
+use cosmic::iced::keyboard::Key;
+use cosmic::iced::keyboard::key::Named;
+use cosmic::iced::{self, window};
 use fde::IconSource;
 
-use lingmo::desktop::fde;
-use lingmo::iced::platform_specific::shell::commands::layer_surface::{
+use cosmic::desktop::fde;
+use cosmic::iced::platform_specific::shell::commands::layer_surface::{
     KeyboardInteractivity, Layer, destroy_layer_surface,
 };
-use lingmo::iced::runtime::platform_specific::wayland::layer_surface::SctkLayerSurfaceSettings;
-use lingmo::widget::autosize;
-use lingmo::{theme, widget};
+use cosmic::iced::runtime::platform_specific::wayland::layer_surface::SctkLayerSurfaceSettings;
+use cosmic::widget::autosize;
+use cosmic::{theme, widget};
 use cosmic_client_toolkit::sctk::output::OutputInfo;
 use cosmic_client_toolkit::toplevel_info::ToplevelInfo;
 use fde::unicase::Ascii;
@@ -120,8 +120,8 @@ fn get_desktop_entry<'a>(entries: &'a [DesktopEntry], id: &str) -> Option<&'a De
     fde::find_app_by_id(entries, Ascii::new(id))
 }
 
-fn create_dialog() -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
-    lingmo::surface::surface_task::<crate::app::Msg>(lingmo::surface::action::simple_layer_shell::<
+fn create_dialog() -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
+    cosmic::surface::surface_task::<crate::app::Msg>(cosmic::surface::action::simple_layer_shell::<
         crate::app::Msg,
     >(
         Default::default,
@@ -133,7 +133,7 @@ fn create_dialog() -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
             size: None,
             ..Default::default()
         },
-        None::<fn() -> lingmo::Element<'static, lingmo::Action<crate::app::Msg>>>,
+        None::<fn() -> cosmic::Element<'static, cosmic::Action<crate::app::Msg>>>,
     ))
 }
 
@@ -200,9 +200,9 @@ fn active_tab(portal: &CosmicPortal) -> Tab {
 pub fn update_msg(
     portal: &mut CosmicPortal,
     msg: Msg,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let Some(args) = portal.screencast_args.as_mut() else {
-        return lingmo::Task::none();
+        return cosmic::Task::none();
     };
 
     match msg {
@@ -253,17 +253,17 @@ pub fn update_msg(
             }
         }
     }
-    lingmo::Task::none()
+    cosmic::Task::none()
 }
 
 pub fn update_args(
     portal: &mut CosmicPortal,
     args: Args,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     // If the dialog is already open, cancel previous request, but re-use dialog surface
     let command = if let Some(args) = portal.screencast_args.take() {
         args.send_response(None);
-        lingmo::Task::none()
+        cosmic::Task::none()
     } else {
         create_dialog()
     };
@@ -293,7 +293,7 @@ pub fn update_args(
 pub fn cancel(
     portal: &mut CosmicPortal,
     session_handle: zvariant::ObjectPath<'static>,
-) -> lingmo::Task<lingmo::Action<crate::app::Msg>> {
+) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     if portal
         .screencast_args
         .as_ref()
@@ -303,12 +303,12 @@ pub fn cancel(
         args.send_response(None);
         destroy_layer_surface(*SCREENCAST_ID)
     } else {
-        lingmo::Task::none()
+        cosmic::Task::none()
     }
 }
 
 fn output_button_appearance(
-    theme: &lingmo::Theme,
+    theme: &cosmic::Theme,
     is_active: bool,
     hovered: bool,
 ) -> widget::button::Style {
@@ -331,8 +331,8 @@ fn output_thumb_button<'a>(
     width: f32,
     height: f32,
     msg: Msg,
-) -> lingmo::Element<'a, Msg> {
-    let content: lingmo::Element<'a, Msg> = match image_handle {
+) -> cosmic::Element<'a, Msg> {
+    let content: cosmic::Element<'a, Msg> = match image_handle {
         Some(image_handle) => widget::image::Image::new(image_handle.clone())
             .width(iced::Length::Fill)
             .height(iced::Length::Fill)
@@ -349,7 +349,7 @@ fn output_thumb_button<'a>(
         .height(iced::Length::Fixed(height))
         .padding(0)
         .selected(is_selected)
-        .class(lingmo::theme::Button::Custom {
+        .class(cosmic::theme::Button::Custom {
             active: Box::new(move |_focused, theme| {
                 output_button_appearance(theme, is_selected, false)
             }),
@@ -370,7 +370,7 @@ fn toplevel_button(
     is_selected: bool,
     icon: IconSource,
     msg: Msg,
-) -> lingmo::Element<'_, Msg> {
+) -> cosmic::Element<'_, Msg> {
     let text = widget::text(label).class(theme::style::Text::Custom(|theme| {
         let container = theme.current_container();
         iced::core::widget::text::Style {
@@ -396,7 +396,7 @@ fn toplevel_button(
     widget::row::with_children(children).spacing(12).into()
 }
 
-pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
+pub(crate) fn view(portal: &CosmicPortal) -> cosmic::Element<'_, Msg> {
     let Some(args) = portal.screencast_args.as_ref() else {
         return widget::space::horizontal()
             .width(iced::Length::Fixed(1.0))
@@ -404,7 +404,7 @@ pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
     };
     let cancel_button = widget::button::standard(fl!("cancel")).on_press(Msg::Cancel);
     let mut share_button =
-        widget::button::standard(fl!("share")).class(lingmo::style::Button::Suggested);
+        widget::button::standard(fl!("share")).class(cosmic::style::Button::Suggested);
     if !args.capture_sources.is_empty() {
         share_button = share_button.on_press(Msg::Share);
     }
@@ -412,7 +412,7 @@ pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
     let tabs =
         widget::tab_bar::horizontal(&portal.screencast_tab_model).on_activate(Msg::ActivateTab);
 
-    let list: lingmo::Element<_> = match active_tab(portal) {
+    let list: cosmic::Element<_> = match active_tab(portal) {
         Tab::Outputs => {
             // Position each output to match the display arrangement (as in the
             // cosmic-settings display page), scaled to fit the dialog.
@@ -489,7 +489,7 @@ pub(crate) fn view(portal: &CosmicPortal) -> lingmo::Element<'_, Msg> {
                 ));
             }
             if args.toplevels.len() > 8 {
-                widget::container(lingmo::widget::scrollable(list))
+                widget::container(cosmic::widget::scrollable(list))
                     .max_height(380.)
                     .width(iced::Length::Fill)
                     .into()

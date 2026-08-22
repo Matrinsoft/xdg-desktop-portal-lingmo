@@ -84,10 +84,10 @@ gst = { package = "gstreamer", version = "0.25.1" }
 clap = { version = "4.6.1", features = ["derive"] }
 
 # [patch."https://github.com/Matrinsoft/liblingmo"]
-# liblingmo = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
-# cosmic-config = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
-# iced_futures = { git = "https://github.com/Matrinsoft/liblingmo//", branch = "theme-v2" }
-# liblingmo = { path = "../libcosmic" }
+# libcosmic = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
+# cosmic-config = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
+# iced_futures = { git = "https://github.com/Matrinsoft/libcosmic//", branch = "theme-v2" }
+# libcosmic = { path = "../libcosmic" }
 # cosmic-config = { path = "../libcosmic/cosmic-config" }
 # cosmic-theme = { path = "../libcosmic/cosmic-theme" }
 
