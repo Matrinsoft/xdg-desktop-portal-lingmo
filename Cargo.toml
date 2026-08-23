@@ -19,8 +19,8 @@ cosmic-files = { git = "https://github.com/Matrinsoft/lingmo-files", default-fea
     "gvfs",
     "wayland",
 ] }
-cosmic-protocols = { git = "https://github.com/Matrinsoft/lingmo-protocols", rev = "14ee91d" }
-cosmic-client-toolkit = { git = "https://github.com/Matrinsoft/lingmo-protocols", rev = "14ee91d" }
+cosmic-protocols = { git = "https://github.com/Matrinsoft/lingmo-protocols", rev = "26b46f1" }
+cosmic-client-toolkit = { git = "https://github.com/Matrinsoft/lingmo-protocols", rev = "26b46f1" }
 futures = "0.3"
 image = "0.25"
 cosmic-bg-config = { git = "https://github.com/Matrinsoft/lingmo-background" }
