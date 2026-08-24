@@ -1505,7 +1505,7 @@ dependencies = [
 
 [[package]]
 name = "cosmic-files"
-version = "1.2.0"
+version = "1.6.0"
 source = "git+https://github.com/Matrinsoft/lingmo-files#59db1cff189ceb7e622f58c658f0e45274901c81"
 dependencies = [
  "anyhow",
