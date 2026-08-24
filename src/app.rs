@@ -19,11 +19,11 @@ pub(crate) fn run() -> cosmic::iced::Result {
         config,
         config_handler,
     };
-    cosmic::app::run::<CosmicPortal>(settings, flags)
+	cosmic::app::run::<LingmoPortal>(settings, flags)
 }
 
 // run iced app with no main surface
-pub struct CosmicPortal {
+pub struct LingmoPortal {
     pub core: app::Core,
     pub tx: Option<tokio::sync::mpsc::Sender<subscription::Event>>,
 
@@ -77,14 +77,14 @@ pub struct Flags {
     pub config: config::Config,
 }
 
-impl cosmic::Application for CosmicPortal {
+impl cosmic::Application for LingmoPortal {
     type Executor = cosmic::executor::Default;
 
     type Flags = Flags;
 
     type Message = Msg;
 
-    const APP_ID: &'static str = "org.freedesktop.portal.desktop.cosmic";
+	const APP_ID: &'static str = "org.freedesktop.portal.desktop.lingmo";
 
     fn core(&self) -> &app::Core {
         &self.core
@@ -128,7 +128,7 @@ impl cosmic::Application for CosmicPortal {
                 input_zone: Some(Vec::new()),
                 anchor: wlr_layer::Anchor::empty(),
                 output: cosmic::iced::runtime::platform_specific::wayland::layer_surface::IcedOutput::Active,
-                namespace: "cosmic_portal_dummy".into(),
+			namespace: "lingmo_portal_dummy".into(),
                 margin: IcedMargin::default(),
                 size: Some((Some(6), Some(6))),
                 exclusive_zone: -1,

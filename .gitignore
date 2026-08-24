@@ -2,8 +2,8 @@ vendor*
 target
 /result
 .cargo
-debian/xdg-desktop-portal-cosmic*
+debian/xdg-desktop-portal-lingmo*
 debian/*debhelper*
 debian/files
-data/dbus-1/org.freedesktop.impl.portal.desktop.cosmic.service
-data/org.freedesktop.impl.portal.desktop.cosmic.service
+data/dbus-1/org.freedesktop.impl.portal.desktop.lingmo.service
+data/org.freedesktop.impl.portal.desktop.lingmo.service

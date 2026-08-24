@@ -1,4 +1,4 @@
-use crate::app::CosmicPortal;
+use crate::app::LingmoPortal;
 use crate::fl;
 use crate::wayland::{CaptureSource, WaylandHelper};
 use crate::widget::keyboard_wrapper::KeyboardWrapper;
@@ -193,12 +193,12 @@ pub enum Msg {
     Cancel,
 }
 
-fn active_tab(portal: &CosmicPortal) -> Tab {
+fn active_tab(portal: &LingmoPortal) -> Tab {
     *portal.screencast_tab_model.active_data::<Tab>().unwrap()
 }
 
 pub fn update_msg(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     msg: Msg,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let Some(args) = portal.screencast_args.as_mut() else {
@@ -257,7 +257,7 @@ pub fn update_msg(
 }
 
 pub fn update_args(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     args: Args,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     // If the dialog is already open, cancel previous request, but re-use dialog surface
@@ -291,7 +291,7 @@ pub fn update_args(
 }
 
 pub fn cancel(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     session_handle: zvariant::ObjectPath<'static>,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     if portal
@@ -396,7 +396,7 @@ fn toplevel_button(
     widget::row::with_children(children).spacing(12).into()
 }
 
-pub(crate) fn view(portal: &CosmicPortal) -> cosmic::Element<'_, Msg> {
+pub(crate) fn view(portal: &LingmoPortal) -> cosmic::Element<'_, Msg> {
     let Some(args) = portal.screencast_args.as_ref() else {
         return widget::space::horizontal()
             .width(iced::Length::Fixed(1.0))

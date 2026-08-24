@@ -1,5 +1,5 @@
 {
-  description = "XDG desktop portal the COSMIC desktop environment";
+  description = "XDG desktop portal the Lingmo desktop environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -40,18 +40,18 @@
         };
 
         cargoArtifacts = craneLib.buildDepsOnly pkgDef;
-        xdg-desktop-portal-cosmic = craneLib.buildPackage (pkgDef // {
+        xdg-desktop-portal-lingmo = craneLib.buildPackage (pkgDef // {
           inherit cargoArtifacts;
         });
       in {
         checks = {
-          inherit xdg-desktop-portal-cosmic;
+          inherit xdg-desktop-portal-lingmo;
         };
 
-        packages.default = xdg-desktop-portal-cosmic;
+        packages.default = xdg-desktop-portal-lingmo;
 
         apps.default = flake-utils.lib.mkApp {
-          drv = xdg-desktop-portal-cosmic;
+          drv = xdg-desktop-portal-lingmo;
         };
 
         devShells.default = pkgs.mkShell {

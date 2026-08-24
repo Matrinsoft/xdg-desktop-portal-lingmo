@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.lingmo
+Exec=@libexecdir@/xdg-desktop-portal-lingmo
+SystemdService=org.freedesktop.impl.portal.desktop.lingmo.service

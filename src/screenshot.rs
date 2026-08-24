@@ -25,7 +25,7 @@ use tokio::sync::mpsc::Sender;
 use wayland_client::protocol::wl_output::WlOutput;
 use zbus::zvariant;
 
-use crate::app::{CosmicPortal, OutputState};
+use crate::app::{LingmoPortal, OutputState};
 use crate::config::screenshot::ImageSaveLocation;
 use crate::config::{self};
 use crate::wayland::{CaptureSource, ShmImage, WaylandHelper};
@@ -583,7 +583,7 @@ impl Screenshot {
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> cosmic::Element<'_, Msg> {
+pub(crate) fn view(portal: &LingmoPortal, id: window::Id) -> cosmic::Element<'_, Msg> {
     let Some((i, output)) = portal.outputs.iter().enumerate().find(|(i, o)| o.id == id) else {
         return space::horizontal().width(Length::Fixed(1.0)).into();
     };
@@ -645,7 +645,7 @@ pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> cosmic::Element<'_,
 }
 
 pub fn update_msg(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     msg: Msg,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     match msg {
@@ -882,7 +882,7 @@ pub fn update_msg(
 }
 
 pub fn update_args(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     args: Args,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let Args {

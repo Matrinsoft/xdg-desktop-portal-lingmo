@@ -8,7 +8,7 @@ use tracing_subscriber::{EnvFilter, fmt};
 use zbus::object_server::{InterfaceRef, SignalEmitter};
 use zbus::zvariant::{self, OwnedValue};
 
-pub use cosmic_portal_config as config;
+pub use lingmo_portal_config as config;
 
 mod access;
 mod app;
@@ -24,7 +24,7 @@ mod subscription;
 mod wayland;
 mod widget;
 
-static DBUS_NAME: &str = "org.freedesktop.impl.portal.desktop.cosmic";
+static DBUS_NAME: &str = "org.freedesktop.impl.portal.desktop.lingmo";
 static DBUS_PATH: &str = "/org/freedesktop/portal/desktop";
 
 const PORTAL_RESPONSE_SUCCESS: u32 = 0;

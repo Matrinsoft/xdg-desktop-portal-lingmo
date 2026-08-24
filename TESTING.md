@@ -1,6 +1,6 @@
 # Testing
 
-This document provides a regression testing checklist for the COSMIC XDG desktop portal. The checklist provides a starting point for Quality Assurance reviews.
+This document provides a regression testing checklist for the Lingmo XDG desktop portal. The checklist provides a starting point for Quality Assurance reviews.
 
 ## Checklist
 

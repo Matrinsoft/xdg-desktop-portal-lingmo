@@ -10,7 +10,7 @@ use std::path::PathBuf;
 use tokio::sync::mpsc::Sender;
 use zbus::zvariant;
 
-use crate::app::{CosmicPortal, Msg as AppMsg};
+use crate::app::{LingmoPortal, Msg as AppMsg};
 use crate::{PortalResponse, subscription};
 
 pub(crate) type Dialog = cosmic_files::dialog::Dialog<Msg>;
@@ -262,7 +262,7 @@ fn map_msg(id: window::Id, message: cosmic::Action<Msg>) -> cosmic::Action<AppMs
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal, id: window::Id) -> cosmic::Element<'_, AppMsg> {
+pub(crate) fn view(portal: &LingmoPortal, id: window::Id) -> cosmic::Element<'_, AppMsg> {
     match portal.file_choosers.get(&id) {
         Some((_args, dialog)) => dialog.view(id).map(move |msg| AppMsg::FileChooser(id, msg)),
         None => {
@@ -359,7 +359,7 @@ fn file_chooser_update_msg(
 }
 
 pub fn update_msg(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     id: window::Id,
     msg: Msg,
 ) -> cosmic::Task<cosmic::Action<AppMsg>> {
@@ -403,7 +403,7 @@ pub fn update_msg(
     }
 }
 
-pub fn update_args(portal: &mut CosmicPortal, args: Args) -> cosmic::Task<cosmic::Action<AppMsg>> {
+pub fn update_args(portal: &mut LingmoPortal, args: Args) -> cosmic::Task<cosmic::Action<AppMsg>> {
     let mut cmds = Vec::with_capacity(2);
 
     let kind = match &args.options {

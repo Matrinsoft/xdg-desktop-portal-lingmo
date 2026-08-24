@@ -1,5 +1,5 @@
 [package]
-name = "xdg-desktop-portal-cosmic"
+name = "xdg-desktop-portal-lingmo"
 version = "0.1.0"
 edition = "2024"
 license = "GPL-3.0-or-later"
@@ -10,7 +10,7 @@ wgpu = ["libcosmic/wgpu"]
 systemd = ["dep:tracing-journald"]
 
 [workspace]
-members = ["cosmic-portal-config"]
+members = ["lingmo-portal-config"]
 
 [dependencies]
 anyhow = "1.0.102"
@@ -24,7 +24,7 @@ cosmic-client-toolkit = { git = "https://github.com/Matrinsoft/lingmo-protocols"
 futures = "0.3"
 image = "0.25"
 cosmic-bg-config = { git = "https://github.com/Matrinsoft/lingmo-background" }
-cosmic-portal-config = { path = "./cosmic-portal-config" }
+lingmo-portal-config = { path = "./lingmo-portal-config" }
 memmap2 = "0.9.10"
 # pipewire = { git = "https://github.com/pop-os/pipewire-rs" }
 pipewire = { git = "https://gitlab.freedesktop.org/pipewire/pipewire-rs", features = [

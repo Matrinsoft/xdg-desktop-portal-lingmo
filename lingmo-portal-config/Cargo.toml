@@ -1,0 +1,15 @@
+﻿[package]
+name = "lingmo-portal-config"
+version = "0.1.0"
+edition = "2024"
+description = "Configuration for Lingmo's XDG portal backend"
+repository = "https://github.com/Matrinsoft/xdg-desktop-portal-lingmo"
+license = "GPL-3.0-or-later"
+
+[dependencies]
+cosmic-config.workspace = true
+log.workspace = true
+
+[dependencies.serde]
+features = ["derive"]
+workspace = true

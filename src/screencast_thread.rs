@@ -621,7 +621,7 @@ fn start_stream(
     let context = pipewire::context::ContextRc::new(&loop_, None)?;
     let core = context.connect_rc(None)?;
 
-    let name = "cosmic-screencast";
+	let name = "lingmo-screencast";
 
     let (node_id_tx, node_id_rx) = oneshot::channel();
 

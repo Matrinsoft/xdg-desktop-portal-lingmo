@@ -14,7 +14,7 @@ use std::collections::HashMap;
 use tokio::sync::mpsc::Sender;
 use zbus::zvariant;
 
-use crate::app::CosmicPortal;
+use crate::app::LingmoPortal;
 use crate::wayland::WaylandHelper;
 use crate::widget::keyboard_wrapper::KeyboardWrapper;
 use crate::{PortalResponse, fl, subscription};
@@ -176,7 +176,7 @@ impl AccessDialogArgs {
     }
 }
 
-pub(crate) fn view(portal: &CosmicPortal) -> cosmic::Element<'_, Msg> {
+pub(crate) fn view(portal: &LingmoPortal) -> cosmic::Element<'_, Msg> {
     let spacing = portal.core.system_theme().cosmic().spacing;
     let Some(args) = portal.access_args.as_ref() else {
         return text("Oops, no access dialog args").into();
@@ -251,7 +251,7 @@ pub(crate) fn view(portal: &CosmicPortal) -> cosmic::Element<'_, Msg> {
 }
 
 pub fn update_msg(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     msg: Msg,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     match msg {
@@ -295,7 +295,7 @@ pub fn update_msg(
     }
 }
 pub fn update_args(
-    portal: &mut CosmicPortal,
+    portal: &mut LingmoPortal,
     mut msg: AccessDialogArgs,
 ) -> cosmic::Task<cosmic::Action<crate::app::Msg>> {
     let mut cmds = Vec::with_capacity(2);

@@ -86,7 +86,7 @@ struct RestoreData {
 impl From<PersistedCaptureSources> for RestoreData {
     fn from(sources: PersistedCaptureSources) -> RestoreData {
         RestoreData {
-            vendor: "COSMIC".to_string(),
+	vendor: "LINGMO".to_string(),
             version: 1,
             data: zvariant::Value::from(zvariant::Structure::from((
                 sources.outputs,
@@ -101,7 +101,7 @@ impl From<PersistedCaptureSources> for RestoreData {
 impl TryFrom<&RestoreData> for PersistedCaptureSources {
     type Error = ();
     fn try_from(restore_data: &RestoreData) -> Result<Self, ()> {
-        if (&*restore_data.vendor, restore_data.version) != ("COSMIC", 1) {
+	if (&*restore_data.vendor, restore_data.version) != ("LINGMO", 1) {
             return Err(());
         }
         let structure = zvariant::Structure::try_from(&*restore_data.data).map_err(|_| ())?;
